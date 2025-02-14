@@ -169,3 +169,16 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# updated by Hamza-XP :
+# Temporary files
+temp/
+*.mp4
+*.avi
+# Environment files
+venv/
+.env
+# IDE files
+.vscode/
+.idea/
