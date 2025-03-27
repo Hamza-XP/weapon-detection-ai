@@ -4,22 +4,26 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    # Image processing
-    MAX_IMAGE_SIZE_MB = 10
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+"""Central configuration class for the application"""
     
-    # Video processing
-    MAX_VIDEO_SIZE_MB = 1024
-    FRAME_SAMPLING_INTERVAL = 20
+    # Security Configuration
+    class Security:
+        SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+        API_KEYS = os.getenv('API_KEYS', 'default_key').split(',')
+        RATE_LIMIT = int(os.getenv('RATE_LIMIT', '100'))  # Requests per minute
+        TOKEN_EXPIRY = int(os.getenv('TOKEN_EXPIRY', '3600'))  # Seconds
     
-    # Model
-    MODEL_PATH = os.getenv('MODEL_PATH', 'models/exported_model')
-    
-    # Security
-    API_KEYS = os.getenv('API_KEYS', 'default_key').split(',')
-    
-    # Storage
-    UPLOAD_FOLDERS = {
-        'images': 'uploads/images',
-        'videos': 'uploads/videos'
+    # Application Configuration
+    class App:
+        MODEL_PATH = os.getenv('MODEL_PATH', 'models/exported_model')
+        MAX_IMAGE_SIZE_MB = 10
+        MAX_VIDEO_SIZE_MB = 1024
+        FRAME_SAMPLING_INTERVAL = 20
+        ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'mp4', 'avi'}
+        MAX_CONTENT_LENGTH = int(os.getenv('MAX_CONTENT_LENGTH', '1073741824'))  # 1GB
+        
+        UPLOAD_FOLDERS = {
+            'images': os.getenv('UPLOAD_IMAGE_DIR', 'uploads/images'),
+            'videos': os.getenv('UPLOAD_VIDEO_DIR', 'uploads/videos')
+        }
     }
