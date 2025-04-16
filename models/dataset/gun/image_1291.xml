@@ -1,0 +1,26 @@
+<annotation>
+	<folder>gun</folder>
+	<filename>image_1291.jpg</filename>
+	<path>D:\project\custom data\test\gun\image_1291.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>295</width>
+		<height>171</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>gun</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>83</xmin>
+			<ymin>7</ymin>
+			<xmax>276</xmax>
+			<ymax>171</ymax>
+		</bndbox>
+	</object>
+</annotation>
