@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Persons</folder>
+	<filename>image_664.jpg</filename>
+	<path>D:\project\custom data\test\Persons\image_664.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>612</width>
+		<height>408</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>person</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>347</xmin>
+			<ymin>29</ymin>
+			<xmax>455</xmax>
+			<ymax>161</ymax>
+		</bndbox>
+	</object>
+</annotation>

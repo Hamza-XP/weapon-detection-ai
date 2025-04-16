@@ -1,0 +1,26 @@
+<annotation>
+	<folder>base ball bat</folder>
+	<filename>image_71.jpg</filename>
+	<path>D:\project\custom data\test\base ball bat\image_71.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>350</width>
+		<height>144</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bat</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>20</xmin>
+			<ymin>65</ymin>
+			<xmax>335</xmax>
+			<ymax>91</ymax>
+		</bndbox>
+	</object>
+</annotation>

@@ -1,0 +1,26 @@
+<annotation>
+	<folder>hammer</folder>
+	<filename>image_1174.jpg</filename>
+	<path>D:\project\custom data\test\hammer\image_1174.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>214</width>
+		<height>236</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>hammer</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>61</xmin>
+			<ymin>7</ymin>
+			<xmax>164</xmax>
+			<ymax>231</ymax>
+		</bndbox>
+	</object>
+</annotation>

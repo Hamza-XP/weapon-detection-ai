@@ -1,0 +1,38 @@
+<annotation>
+	<folder>gun</folder>
+	<filename>image_1697.jpg</filename>
+	<path>D:\project\custom data\test\gun\image_1697.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>300</width>
+		<height>168</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>gun</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>14</xmin>
+			<ymin>86</ymin>
+			<xmax>291</xmax>
+			<ymax>167</ymax>
+		</bndbox>
+	</object>
+	<object>
+		<name>gun</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>19</xmin>
+			<ymin>2</ymin>
+			<xmax>288</xmax>
+			<ymax>80</ymax>
+		</bndbox>
+	</object>
+</annotation>
