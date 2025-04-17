@@ -1,0 +1,26 @@
+<annotation>
+	<folder>knife</folder>
+	<filename>image_1604.jpg</filename>
+	<path>D:\project\custom data\test\knife\image_1604.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>318</width>
+		<height>159</height>
+		<depth>1</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>knife</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>16</xmin>
+			<ymin>67</ymin>
+			<xmax>300</xmax>
+			<ymax>109</ymax>
+		</bndbox>
+	</object>
+</annotation>
