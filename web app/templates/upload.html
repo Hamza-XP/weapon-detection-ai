@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weapon Detection AI - Upload</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      font-family: 'Poppins', sans-serif;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    .project-title {
+      margin-top: 40px;
+      font-size: 50px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-align: center;
+      color: #ffffff;
+      text-shadow: 0px 4px 10px rgba(0,0,0,0.7);
+    }
+
+    .upload-container {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 50px 40px;
+      margin-top: 30px;
+      border-radius: 20px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(15px);
+      text-align: center;
+      width: 480px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .input-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 10px;
+    position: relative;
+  }
+
+  input[type="file"] {
+    padding: 12px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  input[type="file"]::file-selector-button {
+    background: #4CAF50;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.3s ease;
+  }
+
+  input[type="file"]::file-selector-button:hover {
+    background: #43a047;
+  }
+
+  button {
+    margin-top: 0px; /* no extra margin now */
+    background-color: #007bff; /* solid blue */
+    border: none;
+    padding: 12px 26px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    height: 48px; /* match input height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button:hover {
+    background-color: #0069d9;
+    transform: scale(1.05);
+  }
+
+
+
+    .preview {
+      margin-top: 25px;
+    }
+
+    .preview img, .preview video {
+      max-width: 230px;
+      max-height: 230px;
+      border-radius: 12px;
+      margin-top: 15px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .message {
+      margin-top: 25px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 10px;
+      font-size: 15px;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="project-title">Weapon Detection AI</div>
+
+  <div class="upload-container">
+    <h2>Upload an Image or Video</h2>
+    <form action="/" method="POST" enctype="multipart/form-data">
+      <div class="input-group">
+        <input type="file" name="media" accept="image/*,video/*" required onchange="previewFile(event)">
+        <button type="submit">Upload</button>
+      </div>
+      <div class="preview" id="preview"></div>
+    </form>
+
+    {% if message %}
+    <div class="message">
+      {{ message }}
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    function previewFile(event) {
+      const file = event.target.files[0];
+      const preview = document.getElementById('preview');
+      preview.innerHTML = ''; // Clear previous preview
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const ext = file.name.split('.').pop().toLowerCase();
+          if (['png', 'jpg', 'jpeg', 'gif'].includes(ext)) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            preview.appendChild(img);
+          } else if (['mp4', 'avi', 'mov', 'mkv'].includes(ext)) {
+            const video = document.createElement('video');
+            video.src = e.target.result;
+            video.controls = true;
+            preview.appendChild(video);
+          } else {
+            preview.innerHTML = 'Unsupported preview format';
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
