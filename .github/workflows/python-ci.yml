@@ -8,42 +8,44 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # Debian-based system
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    # - name: Install system dependencies
-    #   run: |
-    #     sudo apt-get update
-    #     sudo apt-get install -y \
-    #       libgl1-mesa-glx \
-    #       libsm6 \
-    #       libxext6 \
-    #       libxrender-dev
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          protobuf-compiler \
+          libgl1-mesa-glx \
+          libsm6 \
+          libxext6 \
+          libxrender-dev
 
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
         python-version: "3.10"
-  
+
     - name: Install Python dependencies
       run: |
-          pip install -r requirements.txt
-          pip install opencv-python-headless pillow matplotlib
-  
+        pip install -r requirements.txt
+        pip install opencv-python-headless pillow matplotlib
+
     - name: Install TF Object Detection API
       run: |
-          git clone --depth 1 https://github.com/tensorflow/models.git
-          cd models/research/
-          protoc object_detection/protos/*.proto --python_out=.
-          cp -r object_detection/ ../../
-  
+        git clone --depth 1 https://github.com/tensorflow/models.git
+        cd models/research/
+        protoc object_detection/protos/*.proto --python_out=.
+        find object_detection/protos -name "*.proto" -exec protoc --python_out=. {} \;
+        cp -r object_detection/ ../../
+
     - name: Run tests
       env:
-         PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}
+        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}/models/research/object_detection:${{ github.workspace }}
       run: |
-          pytest -v tests/test_weapon_detector.py
+        pytest -v tests/test_weapon_detector.py
 
     - name: Cleanup test artifacts
       run: |
