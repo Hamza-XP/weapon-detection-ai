@@ -18,7 +18,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y \
           protobuf-compiler \
-          libgl1-mesa-glx \
+          libgl1 \
           libsm6 \
           libxext6 \
           libxrender-dev
@@ -38,12 +38,11 @@ jobs:
         git clone --depth 1 https://github.com/tensorflow/models.git
         cd models/research/
         protoc object_detection/protos/*.proto --python_out=.
-        find object_detection/protos -name "*.proto" -exec protoc --python_out=. {} \;
         cp -r object_detection/ ../../
 
     - name: Run tests
       env:
-        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}/models/research/object_detection:${{ github.workspace }}
+        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}
       run: |
         pytest -v tests/test_weapon_detector.py
 
