@@ -36,6 +36,7 @@ jobs:
     - name: Run tests
       env:
         TEST_IMAGE_PATH: tests/test_image.jpg
+        PYTHONPATH: ${{ github.workspace }}
       run: |
         pytest -v tests/test_weapon_detector.py
 
