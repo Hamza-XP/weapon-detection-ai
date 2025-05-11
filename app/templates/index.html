@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Upload Image{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">Upload Image</h2>
+                
+                <form method="post" enctype="multipart/form-data">
+                    <div class="upload-box bg-white">
+                        <div class="mb-3">
+                            <input type="file" class="form-control" name="file" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="bi bi-upload me-2"></i> Detect Weapons
+                        </button>
+                    </div>
+                    
+                    {% if error %}
+                    <div class="alert alert-danger mt-3" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
