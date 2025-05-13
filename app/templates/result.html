@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Detection Results{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-body">
+        <h2 class="card-title mb-4">Detection Results</h2>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <img src="data:image/jpeg;base64,{{ annotated_image }}" 
+                     class="detection-image" 
+                     alt="Detection Results">
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Detection Summary
+                        </h5>
+                        
+                        <div class="alert {{ 'alert-danger' if detections else 'alert-success' }}">
+                            {{ detections|length }} weapon(s) detected
+                        </div>
+
+                        {% if detections %}
+                        <div class="table-responsive">
+                            <table class="table table-hover detection-table">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Confidence</th>
+                                        <th>Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for box, score, class in detections %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="confidence-bar me-2">
+                                                    <div class="confidence-fill" 
+                                                         style="width: {{ (score * 100)|int }}%"></div>
+                                                </div>
+                                                {{ "%.2f"|format(score * 100) }}%
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">
+                                                X: {{ "%.2f"|format(box[1] * 100) }}%<br>
+                                                Y: {{ "%.2f"|format(box[0] * 100) }}%<br>
+                                                Width: {{ "%.2f"|format((box[3] - box[1]) * 100) }}%<br>
+                                                Height: {{ "%.2f"|format((box[2] - box[0]) * 100) }}%
+                                            </small>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="/" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-repeat me-2"></i>Analyze Another Image
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
