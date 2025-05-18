@@ -6,7 +6,7 @@ import numpy as np
 from werkzeug.utils import secure_filename
 from weapon_detector import WeaponDetector  # Ensure this file exists
 
-app = Flask(_name)  # FIXED from _name
+app = Flask(__name__)  # FIXED from _name
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
@@ -37,8 +37,12 @@ def home():
                 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 results = detector.detect(image_rgb)
                 
-                # Assume results['annotated_image'] is a NumPy array
-                _, buffer = cv2.imencode('.jpg', results['annotated_image'])
+                # Convert annotated image bytes to numpy array
+                annotated_array = cv2.imdecode(
+                    np.frombuffer(results['annotated_image'], np.uint8), 
+                    cv2.IMREAD_COLOR
+                )
+                _, buffer = cv2.imencode('.jpg', annotated_array)
                 annotated_img = base64.b64encode(buffer).decode('utf-8')
                 
                 return render_template('result.html',
@@ -71,8 +75,12 @@ def api_detect():
         
         results = detector.detect(image_rgb)
 
-        # Encode annotated image
-        _, buffer = cv2.imencode('.jpg', results['annotated_image'])
+        # Convert annotated image bytes to numpy array
+        annotated_array = cv2.imdecode(
+            np.frombuffer(results['annotated_image'], np.uint8), 
+            cv2.IMREAD_COLOR
+        )
+        _, buffer = cv2.imencode('.jpg', annotated_array)
         annotated_img = base64.b64encode(buffer).decode('utf-8')
         
         return jsonify({
@@ -87,6 +95,7 @@ def api_detect():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-if _name_ == '_main_':  # FIXED
+# Correct main check syntax
+if __name__ == '__main__':  # Proper double underscores
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(host='0.0.0.0', port=5000, threaded=True)
