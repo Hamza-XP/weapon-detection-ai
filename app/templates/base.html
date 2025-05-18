@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weapon Detection System - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <style>
+        .upload-box {
+            border: 2px dashed #dee2e6;
+            border-radius: 5px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .detection-image {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .detection-table {
+            margin-top: 2rem;
+        }
+        .confidence-bar {
+            width: 100px;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .confidence-fill {
+            height: 100%;
+            background-color: #dc3545;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-center">
+            <img src="https://img.icons8.com/color/48/000000/security-checked.png" class="me-2"/>
+            Weapon Detection System
+        </h1>
+        {% block content %}{% endblock %}
+    </div>
+    
+    <footer class="text-center text-muted py-4">
+        <small>Powered by TensorFlow & Flask | © 2023 Weapon Detection System</small>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
