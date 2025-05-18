@@ -4,19 +4,18 @@ import base64
 from flask import Flask, render_template, request, jsonify
 import numpy as np
 from werkzeug.utils import secure_filename
-from weapon_detector import WeaponDetector  # Assuming your class is in weapon_detector.py
+from weapon_detector import WeaponDetector  # Ensure this file exists
 
-app = Flask(_name_)
+app = Flask(_name)  # FIXED from _name
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB limit
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg'}
 
-# Initialize detector once when app starts
+# Initialize detector once
 detector = WeaponDetector()
 
 def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -33,27 +32,24 @@ def home():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
             
-            # Process image
             try:
                 image = cv2.imread(filepath)
                 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 results = detector.detect(image_rgb)
                 
-                # Convert annotated image to base64 for display
-                _, buffer = cv2.imencode('.jpg', cv2.cvtColor(
-                    cv2.imdecode(np.frombuffer(results['annotated_image'], np.uint8), 
-                    cv2.COLOR_BGR2RGB))
+                # Assume results['annotated_image'] is a NumPy array
+                _, buffer = cv2.imencode('.jpg', results['annotated_image'])
                 annotated_img = base64.b64encode(buffer).decode('utf-8')
                 
                 return render_template('result.html',
                                        annotated_image=annotated_img,
                                        detections=zip(results['boxes'], results['scores'], results['classes']))
             except Exception as e:
-                return render_template('index.html', error=f"Error processing image: {str(e)}")
+                return render_template('index.html', error=f"Error: {str(e)}")
             finally:
                 if os.path.exists(filepath):
                     os.remove(filepath)
-        
+    
     return render_template('index.html')
 
 @app.route('/api/detect', methods=['POST'])
@@ -69,18 +65,14 @@ def api_detect():
         return jsonify({'error': 'Invalid file type'}), 400
     
     try:
-        # Read image directly from memory
-        filestr = file.read()
-        npimg = np.frombuffer(filestr, np.uint8)
+        npimg = np.frombuffer(file.read(), np.uint8)
         image = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
         image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
         results = detector.detect(image_rgb)
-        
-        # Convert annotated image to bytes
-        _, buffer = cv2.imencode('.jpg', cv2.cvtColor(
-            cv2.imdecode(np.frombuffer(results['annotated_image'], np.uint8), 
-            cv2.COLOR_BGR2RGB))
+
+        # Encode annotated image
+        _, buffer = cv2.imencode('.jpg', results['annotated_image'])
         annotated_img = base64.b64encode(buffer).decode('utf-8')
         
         return jsonify({
@@ -95,6 +87,6 @@ def api_detect():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-if _name_ == '_main_':
+if _name_ == '_main_':  # FIXED
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     app.run(host='0.0.0.0', port=5000, threaded=True)
