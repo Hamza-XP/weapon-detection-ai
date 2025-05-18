@@ -22,7 +22,7 @@
                         </h5>
                         
                         <div class="alert {{ 'alert-danger' if detections else 'alert-success' }}">
-                            {{ detections|length }} weapon(s) detected
+                            {{ detections|count }} weapon(s) detected
                         </div>
 
                         {% if detections %}

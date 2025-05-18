@@ -47,7 +47,7 @@ def home():
                 
                 return render_template('result.html',
                                        annotated_image=annotated_img,
-                                       detections=zip(results['boxes'], results['scores'], results['classes']))
+                                       detections=list(zip(results['boxes'], results['scores'], results['classes'])))
             except Exception as e:
                 return render_template('index.html', error=f"Error: {str(e)}")
             finally:
