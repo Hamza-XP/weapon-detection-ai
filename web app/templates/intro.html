@@ -14,6 +14,7 @@
       margin: 0;
       padding: 0;
     }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -35,7 +36,8 @@
       backdrop-filter: blur(10px);
       animation: fadeIn 1.2s ease-in-out;
     }
-     h1 {
+
+    h1 {
       font-size: 3rem;
       font-weight: 700;
       margin-bottom: 20px;
@@ -48,7 +50,8 @@
       line-height: 1.6;
       margin-bottom: 40px;
     }
-.btn {
+
+    .btn {
       display: inline-block;
       background: #00c6ff;
       background: linear-gradient(to right, #0072ff, #00c6ff);
@@ -66,3 +69,35 @@
       transform: scale(1.05);
       box-shadow: 0 8px 20px rgba(0, 198, 255, 0.3);
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding: 30px 20px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      p {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <h1>Weapons Detection System</h1>
+    <p>
+      Welcome to our AI-powered threat detection platform. This system is capable of identifying weapons in images and videos using advanced machine learning models.
+      Designed to support law enforcement and public safety systems, our tool provides fast, reliable, and intelligent surveillance capabilities.
+    </p>
+    <a href="{{ url_for('detect') }}" class="btn">Proceed to Detection</a>
+  </div>
+</body>
+</html>
