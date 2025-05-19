@@ -72,16 +72,24 @@ jobs:
 
     - name: Run API tests
       run: |
+        # Install jq for JSON parsing
+        sudo apt-get install -y jq
+
         # Test valid image upload
         RESPONSE=$(curl -s -F "file=@tests/test_image.jpg" http://localhost:5000/api/detect)
         echo "$RESPONSE" | jq .
+    
+        # Validate response structure
         [ $(echo "$RESPONSE" | jq '.detections.count') -ge 0 ] || exit 1
         [ $(echo "$RESPONSE" | jq '.detections.scores | length') -ge 0 ] || exit 1
-        [ $(echo "$RESPONSE" | jq '.annotated_image | length') -gt 1000 ] || exit 1
+    
+        # Check annotated image length with proper quoting
+        IMG_LENGTH=$(echo "$RESPONSE" | jq -r '.annotated_image | length')
+        [ "$IMG_LENGTH" -gt 1000 ] || exit 1
 
         # Test invalid file type
         RESPONSE=$(curl -s -F "file=@README.md" http://localhost:5000/api/detect)
-        [ $(echo "$RESPONSE" | jq '.error') != 'null' ] || exit 1
+        [ "$(echo "$RESPONSE" | jq '.error')" != "null" ] || exit 1
 
     - name: Run browser tests
       run: |
