@@ -95,20 +95,24 @@ jobs:
       run: |
         xvfb-run -a python - <<END
         import requests
+        import base64
+        import os
         from PIL import Image
-        
-        # Test web interface
+        from io import BytesIO
+
+        # Test /api/detect endpoint
         with open('tests/test_image.jpg', 'rb') as f:
             files = {'file': ('test.jpg', f, 'image/jpeg')}
-            response = requests.post('http://localhost:5000', files=files)
-        
-        assert 'detections' in response.text
-        assert 'annotated_image' in response.text
-        
-        # Verify output image
-        if 'output.jpg' in os.listdir('tests'):
-            img = Image.open('tests/output.jpg')
-            assert img.size[0] > 0 and img.size[1] > 0
+            response = requests.post('http://localhost:5000/api/detect', files=files)
+            data = response.json()
+
+        assert 'detections' in data
+        assert 'annotated_image' in data
+
+        # Decode base64 image
+        img_bytes = base64.b64decode(data['annotated_image'])
+        img = Image.open(BytesIO(img_bytes))
+        assert img.size[0] > 0 and img.size[1] > 0
         END
 
     - name: Cleanup
