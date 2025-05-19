@@ -38,7 +38,7 @@ jobs:
 
     - name: Install TF Object Detection API
       run: |
-        git clone --depth 1 --branch v2.11.0 https://github.com/tensorflow/models.git
+        git clone --depth 1 https://github.com/tensorflow/models.git
         cd models/research/
         protoc object_detection/protos/*.proto --python_out=.
         cp -r object_detection/ ../../
