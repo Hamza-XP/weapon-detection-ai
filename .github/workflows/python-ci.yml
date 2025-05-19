@@ -1,4 +1,4 @@
-name: Python CI
+name: Weapon Detection CI
 
 on:
   push:
@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - uses: actions/checkout@v4
@@ -21,7 +22,8 @@ jobs:
           libgl1 \
           libsm6 \
           libxext6 \
-          libxrender-dev
+          libxrender-dev \
+          xvfb
 
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
@@ -30,22 +32,78 @@ jobs:
 
     - name: Install Python dependencies
       run: |
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install opencv-python-headless pillow matplotlib
+        pip install opencv-python-headless pillow matplotlib pytest requests
 
     - name: Install TF Object Detection API
       run: |
-        git clone --depth 1 https://github.com/tensorflow/models.git
+        git clone --depth 1 --branch v2.11.0 https://github.com/tensorflow/models.git
         cd models/research/
         protoc object_detection/protos/*.proto --python_out=.
         cp -r object_detection/ ../../
 
-    - name: Run tests
+    - name: Verify model files
+      run: |
+        if [ ! -f "model/frozen_inference_graph.pb" ]; then
+          echo "Missing model file: frozen_inference_graph.pb"
+          exit 1
+        fi
+        if [ ! -f "model/label_map.pbtxt" ]; then
+          echo "Missing label map: label_map.pbtxt"
+          exit 1
+        fi
+
+    - name: Run unit tests
       env:
-        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}
+        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}/models/research/slim
       run: |
         pytest -v tests/test_weapon_detector.py
 
-    - name: Cleanup test artifacts
+    - name: Start Flask server
+      env:
+        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}/models/research/slim
       run: |
-        rm -f tests/output.jpg
+        mkdir -p uploads
+        nohup python app/app.py > flask.log 2>&1 &
+        echo "Waiting for server to start..."
+        sleep 5
+        curl --retry 5 --retry-delay 3 http://localhost:5000
+
+    - name: Run API tests
+      run: |
+        # Test valid image upload
+        RESPONSE=$(curl -s -F "file=@tests/test_image.jpg" http://localhost:5000/api/detect)
+        echo "$RESPONSE" | jq .
+        [ $(echo "$RESPONSE" | jq '.detections.count') -ge 0 ] || exit 1
+        [ $(echo "$RESPONSE" | jq '.detections.scores | length') -ge 0 ] || exit 1
+        [ $(echo "$RESPONSE" | jq '.annotated_image | length') -gt 1000 ] || exit 1
+
+        # Test invalid file type
+        RESPONSE=$(curl -s -F "file=@README.md" http://localhost:5000/api/detect)
+        [ $(echo "$RESPONSE" | jq '.error') != 'null' ] || exit 1
+
+    - name: Run browser tests
+      run: |
+        xvfb-run -a python - <<END
+        import requests
+        from PIL import Image
+        
+        # Test web interface
+        with open('tests/test_image.jpg', 'rb') as f:
+            files = {'file': ('test.jpg', f, 'image/jpeg')}
+            response = requests.post('http://localhost:5000', files=files)
+        
+        assert 'detections' in response.text
+        assert 'annotated_image' in response.text
+        
+        # Verify output image
+        if 'output.jpg' in os.listdir('tests'):
+            img = Image.open('tests/output.jpg')
+            assert img.size[0] > 0 and img.size[1] > 0
+        END
+
+    - name: Cleanup
+      run: |
+        pkill -f "python app/app.py"
+        rm -rf uploads tests/output.jpg flask.log
