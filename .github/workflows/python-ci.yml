@@ -56,13 +56,13 @@ jobs:
 
     - name: Run unit tests
       env:
-        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}/models/research/slim
+        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}
       run: |
         pytest -v tests/test_weapon_detector.py
 
     - name: Start Flask server
       env:
-        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}/models/research/slim
+        PYTHONPATH: ${{ github.workspace }}/models/research:${{ github.workspace }}
       run: |
         mkdir -p uploads
         nohup python app/app.py > flask.log 2>&1 &
