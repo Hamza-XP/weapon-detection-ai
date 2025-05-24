@@ -50,7 +50,8 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
-output.jpg   # image result after test
+# image result after test
+output.jpg
 
 # Translations
 *.mo
